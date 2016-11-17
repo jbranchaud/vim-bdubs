@@ -17,10 +17,14 @@ function! s:AllBuffersByNumber()
   return existing_buffers
 endfunction
 
+function! s:BufferIsRemoveable(buffer_number, bang)
+  return a:bang == '!' || !getbufvar(a:buffer_number, "&mod")
+endfunction
+
 function! s:DeleteBuffers(args, bang)
   let current_buffer = bufnr("%")
   for buffer_number in AllBuffersByNumber()
-    if current_buffer != buffer_number
+    if current_buffer != buffer_number && s:BufferIsRemoveable(buffer_number, a:bang)
       execute buffer_number.'bd'.a:bang
     endif
   endfor
@@ -30,7 +34,7 @@ endfunction
 function! s:WipeoutBuffers(args, bang)
   let current_buffer = bufnr("%")
   for buffer_number in AllBuffersByNumber()
-    if current_buffer != buffer_number
+    if current_buffer != buffer_number && s:BufferIsRemoveable(buffer_number, a:bang)
       execute buffer_number.'bw'.a:bang
     endif
   endfor
