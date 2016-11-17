@@ -23,22 +23,30 @@ endfunction
 
 function! s:DeleteBuffers(args, bang)
   let current_buffer = bufnr("%")
+  let buffer_count = 0
+
   for buffer_number in AllBuffersByNumber()
     if current_buffer != buffer_number && s:BufferIsRemoveable(buffer_number, a:bang)
+      let buffer_count = buffer_count + 1
       execute buffer_number.'bd'.a:bang
     endif
   endfor
-  echomsg "buffers deleted"
+
+  echomsg buffer_count." buffers deleted"
 endfunction
 
 function! s:WipeoutBuffers(args, bang)
   let current_buffer = bufnr("%")
+  let buffer_count = 0
+
   for buffer_number in AllBuffersByNumber()
     if current_buffer != buffer_number && s:BufferIsRemoveable(buffer_number, a:bang)
+      let buffer_count = buffer_count + 1
       execute buffer_number.'bw'.a:bang
     endif
   endfor
-  echomsg "buffers wiped out"
+
+  echomsg buffer_count." buffers wiped out"
 endfunction
 
 command! -nargs=* -bang BD call s:DeleteBuffers( '<args>', '<bang>' )
