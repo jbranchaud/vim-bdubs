@@ -17,28 +17,28 @@ function! s:AllBuffersByNumber()
   return existing_buffers
 endfunction
 
-function! s:DeleteBuffers(args)
+function! s:DeleteBuffers(args, bang)
   let current_buffer = bufnr("%")
   for buffer_number in AllBuffersByNumber()
     if current_buffer != buffer_number
-      execute buffer_number.'bd'
+      execute buffer_number.'bd'.a:bang
     endif
   endfor
   echomsg "buffers deleted"
 endfunction
 
-function! s:WipeoutBuffers(args)
+function! s:WipeoutBuffers(args, bang)
   let current_buffer = bufnr("%")
   for buffer_number in AllBuffersByNumber()
     if current_buffer != buffer_number
-      execute buffer_number.'bw'
+      execute buffer_number.'bw'.a:bang
     endif
   endfor
   echomsg "buffers wiped out"
 endfunction
 
-command! -nargs=* BD call s:DeleteBuffers( '<args>' )
-command! -nargs=* BW call s:WipeoutBuffers( '<args>' )
+command! -nargs=* -bang BD call s:DeleteBuffers( '<args>', '<bang>' )
+command! -nargs=* -bang BW call s:WipeoutBuffers( '<args>', '<bang>' )
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
