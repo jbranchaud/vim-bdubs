@@ -24,6 +24,7 @@ function! s:DeleteBuffers(args)
       execute buffer_number.'bd'
     endif
   endfor
+  echomsg "buffers deleted"
 endfunction
 
 function! s:WipeoutBuffers(args)
@@ -33,6 +34,7 @@ function! s:WipeoutBuffers(args)
       execute buffer_number.'bw'
     endif
   endfor
+  echomsg "buffers wiped out"
 endfunction
 
 command! -nargs=* BD call s:DeleteBuffers( '<args>' )
