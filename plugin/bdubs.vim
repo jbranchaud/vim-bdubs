@@ -11,6 +11,7 @@ let g:loaded_bdubs = 1
 let s:save_cpo = &cpo
 set cpo&vim
 
+
 function! s:Reject(list, reject_func)
   return filter(a:list, '!('.a:reject_func.')')
 endfunction
@@ -81,6 +82,7 @@ endfunction
 
 command! -nargs=* -bang BD call s:DeleteBuffers( '<args>', '<bang>' )
 command! -nargs=* -bang BW call s:WipeoutBuffers( '<args>', '<bang>' )
+
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
