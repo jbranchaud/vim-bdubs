@@ -11,6 +11,10 @@ let g:loaded_bdubs = 1
 let s:save_cpo = &cpo
 set cpo&vim
 
+function! s:Reject(list, reject_func)
+  return filter(a:list, '!('.a:reject_func.')')
+endfunction
+
 function! s:BufferNotListed(buffer_number)
   return !buflisted(a:buffer_number)
 endfunction
@@ -37,7 +41,7 @@ function! s:BuffersToRemove(filters)
   let last_buffer = bufnr("$")
   let buffer_list = filter(range(1, last_buffer), 'bufexists(v:val)')
   for filter_func in a:filters
-    let buffer_list = filter(buffer_list, '!'.filter_func.'(v:val)')
+    let buffer_list = s:Reject(buffer_list, filter_func.'(v:val)')
   endfor
   return buffer_list
 endfunction
