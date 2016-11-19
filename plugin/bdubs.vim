@@ -11,6 +11,18 @@ let g:loaded_bdubs = 1
 let s:save_cpo = &cpo
 set cpo&vim
 
+function! s:BufferNotListed(buffer_number)
+  return !buflisted(a:buffer_number)
+endfunction
+
+function! s:BufferIsCurrent(buffer_number)
+  return bufnr("%") == a:buffer_number
+endfunction
+
+function! s:BufferIsModified(buffer_number)
+  return getbufvar(a:buffer_number, "&mod")
+endfunction
+
 function! s:AllBuffersByNumber()
   let last_buffer = bufnr("$")
   let existing_buffers = filter(range(1, last_buffer), 'bufexists(v:val)')
@@ -21,29 +33,43 @@ function! s:BufferIsRemoveable(buffer_number, bang)
   return a:bang == '!' || !getbufvar(a:buffer_number, "&mod")
 endfunction
 
-function! s:DeleteBuffers(args, bang)
-  let current_buffer = bufnr("%")
-  let buffer_count = 0
+function! s:BuffersToRemove(filters)
+  let last_buffer = bufnr("$")
+  let buffer_list = filter(range(1, last_buffer), 'bufexists(v:val)')
+  for filter_func in a:filters
+    let buffer_list = filter(buffer_list, '!'.filter_func.'(v:val)')
+  endfor
+  return buffer_list
+endfunction
 
-  for buffer_number in AllBuffersByNumber()
-    if current_buffer != buffer_number && s:BufferIsRemoveable(buffer_number, a:bang)
-      let buffer_count = buffer_count + 1
-      execute buffer_number.'bd'.a:bang
-    endif
+function! s:DeleteBuffers(args, bang)
+  let filters = ['s:BufferIsCurrent']
+  let filters += ['s:BufferNotListed']
+  if a:bang != '!'
+    let filters += ['s:BufferIsModified']
+  endif
+
+  let buffer_list = s:BuffersToRemove(filters)
+  let buffer_count = len(buffer_list)
+
+  for buffer_number in buffer_list
+    execute buffer_number.'bd'.a:bang
   endfor
 
   echomsg buffer_count." buffers deleted"
 endfunction
 
 function! s:WipeoutBuffers(args, bang)
-  let current_buffer = bufnr("%")
-  let buffer_count = 0
+  let filters = ['s:BufferIsCurrent']
+  if a:bang != '!'
+    let filters += ['s:BufferIsModified']
+  endif
 
-  for buffer_number in AllBuffersByNumber()
-    if current_buffer != buffer_number && s:BufferIsRemoveable(buffer_number, a:bang)
-      let buffer_count = buffer_count + 1
-      execute buffer_number.'bw'.a:bang
-    endif
+  let buffer_list = s:BuffersToRemove(filters)
+  let buffer_count = len(buffer_list)
+
+  for buffer_number in buffer_list
+    execute buffer_number.'bw'.a:bang
   endfor
 
   echomsg buffer_count." buffers wiped out"
