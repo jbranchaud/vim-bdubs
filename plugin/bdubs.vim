@@ -16,6 +16,14 @@ function! s:Reject(list, reject_func)
   return filter(a:list, '!('.a:reject_func.')')
 endfunction
 
+function! s:Pluralize(count, singular_form, plural_form)
+  if a:count == 1
+    return a:count." ".a:singular_form
+  else
+    return a:count." ".a:plural_form
+  endif
+endfunction
+
 function! s:BufferNotListed(buffer_number)
   return !buflisted(a:buffer_number)
 endfunction
@@ -61,7 +69,8 @@ function! s:DeleteBuffers(args, bang)
     execute buffer_number.'bd'.a:bang
   endfor
 
-  echomsg buffer_count." buffers deleted"
+  let msg_prefix = s:Pluralize(buffer_count, "buffer", "buffers")
+  echomsg msg_prefix." deleted"
 endfunction
 
 function! s:WipeoutBuffers(args, bang)
@@ -77,7 +86,8 @@ function! s:WipeoutBuffers(args, bang)
     execute buffer_number.'bw'.a:bang
   endfor
 
-  echomsg buffer_count." buffers wiped out"
+  let msg_prefix = s:Pluralize(buffer_count, "buffer", "buffers")
+  echomsg msg_prefix." wiped out"
 endfunction
 
 command! -nargs=* -bang BD call s:DeleteBuffers( '<args>', '<bang>' )
