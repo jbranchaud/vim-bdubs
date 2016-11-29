@@ -1,0 +1,34 @@
+*bdubs.txt*	Quickly delete and wipeout buffers
+
+Author: Josh Branchaud <http://joshbranchaud.com>
+
+INTRODUCTION                    *bdubs*
+
+This plugin exposes some commands for quickly clearing out that buffer list
+that can all to easily become cluttered and overfilled.
+
+:BD[N]        Uses |:bdelete| to delete all of the buffers in the
+              |buffer-list| except for the current buffer. Because of the
+              way |:bd| works, each deleted buffer will be unloaded and
+              unlisted. If the number [N] is specified, that many of the
+              most recently used buffers, including the current buffer, will
+              not be deleted. >
+                  :BD       " deletes all but the current buffer
+                  :BD3      " deletes all but the 3 most recently used
+                            " buffers
+<
+
+:BW[N]        Uses |:bwipeout| to delete all of the buffers in the
+              |buffer-list| except for the current buffer. Because of the
+              way |:bw| works, each deleted buffer will be unloaded and
+              entirely removed from the buffer list. If the number [N] is
+              specified, that many of the most recently used buffers,
+              including the current buffer, will not be wiped out. >
+                  :BW       " wipes out all but the current buffer
+                  :BW2      " wipes out all but the 2 most recently used
+                            " buffers
+<
+
+LICENSE
+
+Copyright (c) 2016 Josh Branchaud. Distributed under the MIT license.
