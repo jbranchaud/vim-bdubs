@@ -38,6 +38,7 @@ endfunction
 
 """
 " Most Recently Used Files
+" source: https://github.com/yegappan/mru
 """
 
 if !exists('MRU_Max_Entries')
