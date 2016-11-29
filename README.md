@@ -8,6 +8,11 @@
 
 See [`doc/bdubs.txt`](doc/bdubs.txt) for more details.
 
+## Installation
+
+Add `Plug 'jbranchaud/vim-bdubs'` or some equivalent (based on your plugin
+manager) to your `.vimrc` file.
+
 ## License
 
 &copy; 2016 Josh Branchaud
